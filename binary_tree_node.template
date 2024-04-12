@@ -1,0 +1,146 @@
+
+#include "binary_tree_node.h"
+
+// Constructor
+template<class T>
+BinaryTree<T>::BinaryTree() : root(nullptr) {}
+
+// Destructor
+template<class T>
+BinaryTree<T>::~BinaryTree() {
+    deleteTree(root);
+}
+
+//insert a value into the binary tree
+template<class T>
+void BinaryTree<T>::insert(value_type value) {
+    insertHelper(root, value);
+}
+
+//display the binary tree
+template<class T>
+void BinaryTree<T>::display() {
+    std::cout <<"The original tree: ";
+    displayHelper(root);
+    std::cout << std::endl;
+}
+
+//perform pre-order traversal and display the binary tree
+template<class T>
+void BinaryTree<T>::preOrderDisplay() {
+    std::cout << "Pre-order traversal: ";
+    preOrderHelper(root);
+    std::cout << std::endl;
+}
+
+//perform in-order traversal and display the binary tree
+template<class T>
+void BinaryTree<T>::inOrderDisplay() {
+    std::cout << "In-order traversal: ";
+    inOrderHelper(root);
+    std::cout << std::endl;
+}
+
+// perform post-order traversal and display the binary tree
+template<class T>
+void BinaryTree<T>::postOrderDisplay() {
+    std::cout << "Post-order traversal: ";
+    postOrderHelper(root);
+    std::cout << std::endl;
+}
+
+//insert a value into the binary tree
+template<class T>
+void BinaryTree<T>::insertHelper(Node*& current, value_type value) {
+    if (current == nullptr) {
+        // If current node is null, create a new node with the value
+        current = new Node(value);
+    } else {
+        // Otherwise, iterate through the tree to find the appropriate insertion point
+        Node** temp = &current;
+        while (*temp != nullptr) {
+            // Navigate to the left child if available
+            if ((*temp)->left == nullptr) {
+                temp = &((*temp)->left);
+            }
+            // Navigate to the right child if available
+            else if ((*temp)->right == nullptr) {
+                temp = &((*temp)->right);
+            } else {
+                // If both children are present, choose the one with a missing grandchild
+                if ((*temp)->left->left == nullptr || (*temp)->left->right == nullptr) {
+                    temp = &((*temp)->left);
+                } else {
+                    temp = &((*temp)->right);
+                }
+            }
+        }
+        // Insert the value at the appropriate position
+        *temp = new Node(value);
+    }
+}
+
+//display the binary tree (pre-order traversal)
+template<class T>
+void BinaryTree<T>::displayHelper(Node* current) {
+    if (current != nullptr) {
+        // Display the current node's data
+        std::cout << current->data << " ";
+        // Recursively display the left subtree
+        displayHelper(current->left);
+        // Recursively display the right subtree
+        displayHelper(current->right);
+    }
+}
+
+//perform pre-order traversal and display the binary tree
+template<class T>
+void BinaryTree<T>::preOrderHelper(Node* current) {
+    if (current != nullptr) {
+        // Display the current node's data
+        std::cout << current->data << " ";
+        // Recursively traverse the left subtree
+        preOrderHelper(current->left);
+        // Recursively traverse the right subtree
+        preOrderHelper(current->right);
+    }
+}
+
+//perform in-order traversal and display the binary tree
+template<class T>
+void BinaryTree<T>::inOrderHelper(Node* current) {
+    if (current != nullptr) {
+        // Recursively traverse the left subtree
+        inOrderHelper(current->left);
+        // Display the current node's data
+        std::cout << current->data << " ";
+        // Recursively traverse the right subtree
+        inOrderHelper(current->right);
+    }
+}
+
+//perform post-order traversal and display the binary tree
+template<class T>
+void BinaryTree<T>::postOrderHelper(Node* current) {
+    if (current != nullptr) {
+        // Recursively traverse the left subtree
+        postOrderHelper(current->left);
+        // Recursively traverse the right subtree
+        postOrderHelper(current->right);
+        // Display the current node's data
+        std::cout << current->data << " ";
+    }
+}
+
+//delete the binary tree (post-order traversal)
+template<class T>
+void BinaryTree<T>::deleteTree(Node* current) {
+    if (current != nullptr) {
+        // Recursively delete the left subtree
+        deleteTree(current->left);
+        // Recursively delete the right subtree
+        deleteTree(current->right);
+        // Delete the current node
+        delete current;
+    }
+}
