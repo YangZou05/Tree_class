@@ -1,0 +1,126 @@
+#include "binary_tree_array.h"
+
+template <class T>
+Tree<T>::Tree():tree_array(nullptr), capacity(default_capacity), size(0){
+    tree_array = new value_type[capacity];
+}
+
+//copy constructor
+template <class T>
+Tree<T>::Tree(const Tree& other){
+    deep_copy(other);
+}    
+//destructor
+template <class T>
+Tree<T>::~Tree(){
+    delete[] tree_array;
+}
+
+//=operator
+template<class T>
+Tree<T>& Tree<T>::operator=(const Tree& other) {
+    delete[] tree_array;
+    deep_copy(other);
+    return *this;
+}
+
+//a copy function to copy all the element form the other array
+template<class T>
+void Tree<T>::deep_copy(const Tree& other) {
+    size = other.size;
+    tree_array = new value_type[size];
+    //copy all element from other 
+    for (size_type i = 0; i < size; i++) {
+        tree_array[i] = other.tree_array[i];
+    }
+}
+
+template<class T>
+void Tree<T>::insert(value_type value){
+    //if size is greater than the capacity then expand the capacity
+    if (size == capacity) {
+        expandCapacity();
+    }
+    //insert a value at the end of the array
+    tree_array[size++] = value;
+}
+
+template <class T>
+void Tree<T>::display(){
+    std::cout << "The original tree: ";
+    for(int i = 0; i < size; i++){
+        std::cout << tree_array[i] << " ";
+    }
+    std::cout << std::endl;
+}
+
+//print the tree in pre order
+template<class T>
+void Tree<T>::preOrderDisplay() {
+    std::cout << "Pre-order traversal: ";
+    preOrderTraversal(0);
+    std::cout << std::endl;
+}
+
+//print the tree in order
+template<class T>
+void Tree<T>::inOrderDisplay() {
+    std::cout << "In-order traversal: ";
+    inOrderTraversal(0);
+    std::cout << std::endl;
+}
+
+//print the tree in post order
+template<class T>
+void Tree<T>::postOrderDisplay() {
+    std::cout << "Post-order traversal: ";
+    postOrderTraversal(0);
+    std::cout << std::endl;
+}
+
+//expand the capacity
+template<class T>
+void Tree<T>::expandCapacity() {
+    //double the capacity
+    size_type newCapacity = capacity * 2;
+    //copy the array to the new array
+    value_type* newArray = new T[newCapacity];
+    for (int i = 0; i < size; ++i) {
+        newArray[i] = tree_array[i];
+    }
+    delete[] tree_array;
+    //update the tree_array
+    tree_array = newArray;
+    capacity = newCapacity;
+}
+
+//print the tree in pre order
+template<class T>
+void Tree<T>::preOrderTraversal(size_type index) {
+    if (index >= size) return;
+    //print parent first then left and right child
+    std::cout << tree_array[index] << " ";
+    //2*index +1 is the left child and 2*index + 2 is left child
+    preOrderTraversal(2 * index + 1);
+    preOrderTraversal(2 * index + 2);
+}
+
+//print the tree in order
+template<class T>
+void Tree<T>::inOrderTraversal(size_type index) {
+    if (index >= size) return;
+    //print left child first, then parent and right child
+    inOrderTraversal(2 * index + 1);
+    std::cout << tree_array[index] << " ";
+    inOrderTraversal(2 * index + 2);
+}
+
+//print the tree in post order
+template<class T>
+void Tree<T>::postOrderTraversal(size_type index) {
+    if (index >= size) return;
+    //print left and right child first then parent
+    postOrderTraversal(2 * index + 1);
+    postOrderTraversal(2 * index + 2);
+    std::cout << tree_array[index] << " ";
+}
